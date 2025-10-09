@@ -1,0 +1,10 @@
+  vector<int> successfulPairs(vector<int>& spells, vector<int>& potions, long long success) {
+     sort(potions.begin(),potions.end());
+    vector<int>ans;
+    for (int x:spells) {
+        long long n=(success+x-1)/x;
+        int idx=lower_bound(potions.begin(),potions.end(),n)-potions.begin();
+        ans.push_back(potions.size()-idx);
+    }
+    return ans;
+    }
