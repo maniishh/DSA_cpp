@@ -13,3 +13,4 @@ public:
         return moves.size() - 2 * mini;
     }
 };
+//by manish
