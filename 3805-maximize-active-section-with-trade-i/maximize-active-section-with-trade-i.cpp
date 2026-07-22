@@ -6,12 +6,14 @@ public:
 
         int ones = 0;
         for (char c : s)
-            if (c == '1') ones++;
+            if (c == '1')
+                ones++;
 
         vector<pair<char, int>> runs;
-        for (int i = 0; i < m; ) {
+        for (int i = 0; i < m;) {
             int j = i;
-            while (j < m && t[j] == t[i]) j++;
+            while (j < m && t[j] == t[i])
+                j++;
             runs.push_back({t[i], j - i});
             i = j;
         }
@@ -19,12 +21,11 @@ public:
         int bestGain = 0;
 
         for (int i = 1; i + 1 < (int)runs.size(); i++) {
-            if (runs[i].first == '1' &&
-                runs[i - 1].first == '0' &&
+            if (runs[i].first == '1' && runs[i - 1].first == '0' &&
                 runs[i + 1].first == '0') {
 
-                bestGain = max(bestGain,
-                               runs[i - 1].second + runs[i + 1].second);
+                bestGain =
+                    max(bestGain, runs[i - 1].second + runs[i + 1].second);
             }
         }
 
