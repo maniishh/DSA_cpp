@@ -1,46 +1,49 @@
 class Solution {
 public:
-int ShortestPath(vector<vector<int>> &grid, pair<int,int> source, pair<int,int> destination){
-    queue<pair<int,pair<int,int>>> q;
-    int n = grid.size(), m = grid[0].size();
-    vector<vector<int>> dist(n, vector<int>(m, 1e9));
-    dist[source.first][source.second] = 1; 
-    q.push({1,{source.first, source.second}}); 
+    int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
 
-    int dr[] = {-1,-1,-1,0,1,1,1,0};
-    int dc[] = {-1,0,1,1,1,0,-1,-1};
+        if (grid[0][0] == 1 || grid[n - 1][m - 1] == 1)
+            return -1;
 
-    while(!q.empty()){
-        auto it = q.front();
-        q.pop();
-        int dis = it.first;
-        int r = it.second.first;
-        int c = it.second.second;
+        queue<pair<int, pair<int, int>>> q;
 
-        for(int i = 0; i < 8; i++){
-            int nr = r + dr[i];
-            int nc = c + dc[i];
+        vector<vector<int>> vis(n, vector<int>(m, 0));
 
-            if(nr >= 0 && nr < n && nc >= 0 && nc < m && grid[nr][nc] == 0 && dis + 1 < dist[nr][nc]){
-                dist[nr][nc] = dis + 1;
-                if(nr == destination.first && nc == destination.second){
-                    return dis + 1;
+        q.push({1, {0, 0}});
+        vis[0][0] = 1;
+
+        int dx[] = {0, 0, -1, 1, 1, -1, -1, 1};
+        int dy[] = {-1, 1, 0, 0, 1, -1, 1, -1};
+
+        while (!q.empty()) {
+
+            auto it = q.front();
+            q.pop();
+
+            int x = it.second.first;
+            int y = it.second.second;
+            int t = it.first;
+
+            if (x == n - 1 && y == m - 1)
+                return t;
+
+            for (int i = 0; i < 8; i++) {
+
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                if (nx >= 0 && nx < n && ny >= 0 && ny < m && !vis[nx][ny] &&
+                    grid[nx][ny] == 0) {
+
+                    vis[nx][ny] = 1;
+
+                    q.push({t + 1, {nx, ny}});
                 }
-                q.push({dis + 1, {nr, nc}});
             }
         }
+
+        return -1;
     }
-
-    return -1;  
-}
-
-int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
-    int n = grid.size(), m = grid[0].size();
-
-    if(grid[0][0] == 1 || grid[n-1][m-1] == 1) return -1;
-    if(n == 1 && m == 1 && grid[0][0] == 0) return 1; 
-
-    return ShortestPath(grid, {0,0}, {n-1,m-1});
-}
-
 };
