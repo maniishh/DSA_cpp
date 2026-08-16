@@ -1,36 +1,43 @@
 class Solution {
 public:
-    int f(vector<int>& nums, int start, int end) {
-        if (start > end)
+    int solve(int idx, vector<int>& nums, vector<int>& dp) {
+        if (idx == 0)
+            return nums[idx];
+
+        if (idx < 0)
             return 0;
-        if (start == end)
-            return nums[start];
 
-        int prev2 = nums[start];
-        int prev1 = max(nums[start], nums[start + 1]);
+        if (dp[idx] != -1)
+            return dp[idx];
 
-        for (int i = start + 2; i <= end; i++) {
-            int current = max(prev2 + nums[i], prev1);
-            prev2 = prev1;
-            prev1 = current;
-        }
+        int pick = nums[idx] + solve(idx - 2, nums, dp);
+        int notpick = solve(idx - 1, nums, dp);
 
-        return prev1;
+        return dp[idx] = max(pick, notpick);
     }
+
     int rob(vector<int>& nums) {
         int n = nums.size();
 
-        if (n == 0)
-            return 0;
         if (n == 1)
             return nums[0];
-        if (n == 2)
-            return max(nums[0], nums[1]);
 
-        int case1 = f(nums, 0, n - 2);
+        vector<int> v1, v2;
 
-        int case2 = f(nums, 1, n - 1);
+        for (int i = 0; i < n; i++) {
+            if (i != 0)
+                v1.push_back(nums[i]);
 
-        return max(case1, case2);
+            if (i != n - 1)
+                v2.push_back(nums[i]);
+        }
+
+        vector<int> dp1(v1.size(), -1);
+        vector<int> dp2(v2.size(), -1);
+
+        int c1 = solve(v1.size() - 1, v1, dp1);
+        int c2 = solve(v2.size() - 1, v2, dp2);
+
+        return max(c1, c2);
     }
 };
