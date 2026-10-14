@@ -1,32 +1,29 @@
 class Solution {
-public:
-    int f(vector<int>& weights, int x) {
-        int cap = 0;
-        int d = 1;
-        for (int i = 0; i < weights.size(); i++) {
-            if (cap + weights[i] <= x) {
-                cap += weights[i];
+private:
+    bool check(int mid, vector<int>& w, int days) {
+        int count = 1;
+        int sum = 0;
+        for (int i = 0; i < w.size(); i++) {
+
+            if (sum + w[i] <= mid) {
+                sum += w[i];
             } else {
-                d++;
-                cap = weights[i];
+                count++;
+                sum = w[i];
             }
         }
-
-        return d;
+        return days >= count;
     }
 
+public:
     int shipWithinDays(vector<int>& weights, int days) {
         int n = weights.size();
         int low = *max_element(weights.begin(), weights.end());
-        int sum = 0;
+        int high = accumulate(weights.begin(), weights.end(), 0);
         int ans = 0;
-        for (int i = 0; i < n; i++) {
-            sum += weights[i];
-        }
-        int high = sum;
         while (low <= high) {
             int mid = low + (high - low) / 2;
-            if (f(weights, mid) <= days) {
+            if (check(mid, weights, days)) {
                 ans = mid;
                 high = mid - 1;
             } else {
