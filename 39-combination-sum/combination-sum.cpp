@@ -1,25 +1,24 @@
 class Solution {
 public:
-    void solve(int idx, vector<int>& can, int target, vector<vector<int>>& res,
-               vector<int>& ans) {
-        int n = can.size();
-        if (idx == n) {
-            if (target == 0) {
-                res.push_back(ans);
-            }
+    vector<vector<int>> ans;
+    vector<int> res;
+    void solve(int idx, vector<int>& nums, int target) {
+        if (idx == nums.size() || target < 0)
+            return;
+        if (target == 0) {
+            ans.push_back(res);
             return;
         }
-        if (can[idx] <= target) {
-            ans.push_back(can[idx]);
-            solve(idx, can, target - can[idx], res, ans);
-            ans.pop_back();
-        }
-        solve(idx + 1, can, target, res, ans);
+        res.push_back(nums[idx]);
+        solve(idx, nums, target - nums[idx]);
+        res.pop_back();
+
+        solve(idx + 1, nums, target);
     }
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        vector<vector<int>> res;
-        vector<int> ans;
-        solve(0, candidates, target, res, ans);
-        return res;
+        // 2,3,6,7
+        // 2 2 3
+        solve(0, candidates, target);
+        return ans;
     }
 };
