@@ -11,25 +11,28 @@
 class Solution {
 public:
     ListNode* reverseKGroup(ListNode* head, int k) {
+        if (head == nullptr || k <= 1) {
+            return head;
+        }
         ListNode* temp = head;
-        int cnt = 0;
-        while (cnt < k) {
-            if (temp == NULL) {
+        for (int i = 0; i < k;
+             i++) { // here we are checking if k nodes exists in grp or not
+            if (temp == nullptr) {
                 return head;
             }
             temp = temp->next;
-            cnt++;
         }
-        ListNode* prev = reverseKGroup(temp, k);
-        temp = head;
-        cnt = 0;
-        while (cnt < k) {
-            ListNode* next = temp->next;
-            temp->next = prev;
-            prev = temp;
-            temp = next;
-            cnt++;
+        ListNode* prev = nullptr;
+        ListNode* curr = head;
+        // now we will reverse in k groups
+        for (int i = 0; i < k; i++) {
+            ListNode* nextNode = curr->next;
+            curr->next = prev;
+            prev = curr;
+            curr = nextNode;
         }
+
+        head->next = reverseKGroup(curr, k);
         return prev;
     }
 };
